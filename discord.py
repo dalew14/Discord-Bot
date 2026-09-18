@@ -32,7 +32,7 @@ async def on_ready():
 
 @bot.command()
 async def hello(ctx):
-    await ctx.send("Hello! I'm AnimeOracle!")
+    await ctx.send("Hello! I'm YapBot!")
 
 
 if not TOKEN:
