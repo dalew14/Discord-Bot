@@ -17,6 +17,8 @@ ai_client = AsyncOpenAI(api_key=OPENAI_API_KEY)
 intents = discord.Intents.default()
 intents.message_content = True
 
+Crole = "ChainsawMan"
+
 bot = commands.Bot(
     command_prefix="!",
     intents=intents
@@ -33,6 +35,19 @@ async def on_ready():
 async def hello(ctx):
     await ctx.send("Hello! I'm AnimeOracle!")
 
+@bot.command()
+async def paynis(ctx):
+    await ctx.send("paynis")
+
+@bot.command()
+async def assign(ctx):
+    role = discord.utils.get(ctx.guild.roles, name=Crole)
+    if role:
+        await ctx.author.add_roles(role)
+        await ctx.send(f"{ctx.author.mention} has been assigned the role '{Crole}'!")
+    else:
+        await ctx.send(f"Role Doesn't Exist")
+    
 
 @bot.event
 async def on_message(message):
