@@ -17,6 +17,11 @@ ai_client = AsyncOpenAI(api_key=OPENAI_API_KEY)
 intents = discord.Intents.default()
 intents.message_content = True
 
+MOD_ROLE = "Moderator"
+
+def is_mod(ctx):
+    role = discord.utils.get(ctx.author.roles, name = MOD_ROLE)
+    return role is not None
 
 anime_roles = {
     "chainsawman": "ChainsawMan",
