@@ -7,18 +7,10 @@ from discord.ext import commands
 from dotenv import load_dotenv
 
 
-# ============================================
-# LOAD .ENV VARIABLES
-# ============================================
-
 load_dotenv()
 
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 
-
-# ============================================
-# DISCORD SETUP
-# ============================================
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -31,92 +23,67 @@ bot = commands.Bot(
 )
 
 
-# ============================================
-# ANIME ROLES
-# ============================================
-
 anime_roles = {
     "chainsawman": "ChainsawMan",
     "jjk": "JJK",
     "gachiakuta": "Gachiakuta",
     "naruto": "Naruto",
-    "bleach": "Bleach"
+    "bleach": "Bleach",
+    "dragon ball": "Dragon Ball",
+    "one piece": "One Piece",
+    "jjba": "JJBA"
 }
 
 
-# ============================================
-# MOD CHECK HELPER
-# ============================================
-
-def is_mod():
+def is_mod(): #mod checker... checks if person has mod
     async def predicate(ctx):
         mod_role = discord.utils.get(ctx.guild.roles, name="Moderator")
         if ctx.author.guild_permissions.administrator:
             return True
         if mod_role and mod_role in ctx.author.roles:
             return True
-        await ctx.send("❌ You need the `Moderator` role to use this command.")
+        await ctx.send("You need the `Moderator` role to use this command.")
         return False
     return commands.check(predicate)
 
 
-# ============================================
-# BOT STARTUP
-# ============================================
-
-@bot.event
+@bot.event #this is the bot start up, essentially we press play and this plays in terminal
 async def on_ready():
     print(f"Logged in as {bot.user}")
     print("YapBot is online!")
 
 
-# ============================================
-# HELLO COMMAND
-# ============================================
-
-@bot.command()
+@bot.command() #literally the first command
 async def hello(ctx):
     await ctx.send("Hello, I'm YapBot!")
 
 
-# ============================================
-# PAYNIS COMMAND
-# ============================================
-
-@bot.command()
+@bot.command() #command I added for fun
 async def paynis(ctx):
     await ctx.send("paynis")
 
 
-# ============================================
-# HELP COMMAND
-# ============================================
-
-@bot.command(name="help")
+@bot.command(name="help") #help command - sends bot commands
 async def help_command(ctx):
     await ctx.send(
-        "**📋 YapBot Commands**\n\n"
-        "**🎌 Anime Roles**\n"
+        "** YapBot Commands**\n\n"
+        "** Anime Roles**\n"
         "`!assign <anime>` — Get an anime role\n"
         "`!remove <anime>` — Remove an anime role\n"
         "`!roles` — List available anime roles\n\n"
-        "**🔍 Anime Info**\n"
+        "** Anime Info**\n"
         "`!anime <name>` — Look up an anime\n\n"
-        "**🛡️ Mod Commands** *(Moderator role required)*\n"
+        "** Mod Commands** *(Moderator role required)*\n"
         "`!kick @user [reason]` — Kick a user\n"
         "`!mute @user [minutes] [reason]` — Timeout a user\n"
         "`!ban @user [reason]` — Ban a user\n\n"
-        "**⚙️ Admin Commands**\n"
+        "** Admin Commands**\n"
         "`!givemod @user` — Give someone the Moderator role\n"
         "`!removemod @user` — Remove someone's Moderator role"
     )
 
 
-# ============================================
-# ASSIGN ANIME ROLE
-# ============================================
-
-@bot.command()
+@bot.command() #assign roles command
 async def assign(ctx, anime=None):
 
     if anime is None:
@@ -143,11 +110,7 @@ async def assign(ctx, anime=None):
     await ctx.send(f"{ctx.author.mention} has been given the `{role_name}` role!")
 
 
-# ============================================
-# REMOVE ANIME ROLE
-# ============================================
-
-@bot.command()
+@bot.command() #remove roles
 async def remove(ctx, anime=None):
 
     if anime is None:
@@ -178,11 +141,8 @@ async def remove(ctx, anime=None):
     await ctx.send(f"{ctx.author.mention} has had the `{role_name}` role removed.")
 
 
-# ============================================
-# SHOW AVAILABLE ROLES
-# ============================================
 
-@bot.command()
+@bot.command() #shows roles you can give yourself
 async def roles(ctx):
 
     available_roles = "\n".join(
@@ -197,11 +157,7 @@ async def roles(ctx):
     )
 
 
-# ============================================
-# ANIME SEARCH COMMAND (AniList API — replaces Jikan)
-# ============================================
-
-@bot.command()
+@bot.command() #Keon added this, it was orginally gonna be a different API, but he used anilist which actually works way better
 async def anime(ctx, *, search):
 
     async with ctx.channel.typing():
@@ -210,7 +166,7 @@ async def anime(ctx, *, search):
 
             url = "https://graphql.anilist.co"
 
-            # Try anime search first
+            
             anime_query = """
             query ($search: String) {
                 Media(search: $search, type: ANIME) {
@@ -232,7 +188,7 @@ async def anime(ctx, *, search):
             data = response.json()
             media = data.get("data", {}).get("Media") if response.status_code == 200 else None
 
-            # If anime not found, try character search
+            
             if not media:
 
                 char_query = """
@@ -284,7 +240,7 @@ async def anime(ctx, *, search):
                     appears_in = f"\n**Appears in:** [{anime_title}]({anime_url})"
 
                 await ctx.send(
-                    f"**👤 {name}** *(character)*{appears_in}\n\n"
+                    f"** {name}** *(character)*{appears_in}\n\n"
                     f"**About:**\n{description}\n\n"
                     f"**AniList:** {site_url}"
                 )
@@ -339,11 +295,8 @@ async def anime(ctx, *, search):
             )
 
 
-# ============================================
-# GIVE MOD ROLE (Admin only)
-# ============================================
 
-@bot.command()
+@bot.command() #Give mod role, only admins can give mod... for security measure
 @commands.has_permissions(administrator=True)
 async def givemod(ctx, member: discord.Member = None):
 
@@ -361,11 +314,7 @@ async def givemod(ctx, member: discord.Member = None):
     await ctx.send(f"✅ {member.mention} has been given the `Moderator` role.")
 
 
-# ============================================
-# REMOVE MOD ROLE (Admin only)
-# ============================================
-
-@bot.command()
+@bot.command() #remove mod role
 @commands.has_permissions(administrator=True)
 async def removemod(ctx, member: discord.Member = None):
 
@@ -387,12 +336,8 @@ async def removemod(ctx, member: discord.Member = None):
     await ctx.send(f"✅ {member.mention} has had the `Moderator` role removed.")
 
 
-# ============================================
-# KICK COMMAND (Mod only)
-# ============================================
-
-@bot.command()
-@is_mod()
+@bot.command() #kick
+@is_mod() #CHECK FOR MOD
 async def kick(ctx, member: discord.Member = None, *, reason="No reason provided"):
 
     if member is None:
@@ -407,11 +352,7 @@ async def kick(ctx, member: discord.Member = None, *, reason="No reason provided
     await ctx.send(f"👢 {member.mention} has been kicked. Reason: {reason}")
 
 
-# ============================================
-# MUTE / TIMEOUT COMMAND (Mod only)
-# ============================================
-
-@bot.command()
+@bot.command() #mute command
 @is_mod()
 async def mute(ctx, member: discord.Member = None, duration: int = 10, *, reason="No reason provided"):
 
@@ -428,11 +369,8 @@ async def mute(ctx, member: discord.Member = None, duration: int = 10, *, reason
     await ctx.send(f"🔇 {member.mention} has been muted for {duration} minute(s). Reason: {reason}")
 
 
-# ============================================
-# BAN COMMAND (Mod only)
-# ============================================
 
-@bot.command()
+@bot.command() #ban command
 @is_mod()
 async def ban(ctx, member: discord.Member = None, *, reason="No reason provided"):
 
@@ -448,16 +386,8 @@ async def ban(ctx, member: discord.Member = None, *, reason="No reason provided"
     await ctx.send(f"🔨 {member.mention} has been banned. Reason: {reason}")
 
 
-# ============================================
-# CHECK DISCORD TOKEN
-# ============================================
-
-if not DISCORD_TOKEN:
+if not DISCORD_TOKEN: #token check
     raise ValueError("DISCORD_TOKEN is missing from the .env file.")
 
-
-# ============================================
-# START THE BOT
-# ============================================
 
 bot.run(DISCORD_TOKEN)
