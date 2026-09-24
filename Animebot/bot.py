@@ -29,8 +29,8 @@ anime_roles = {
     "gachiakuta": "Gachiakuta",
     "naruto": "Naruto",
     "bleach": "Bleach",
-    "dragon ball": "Dragon Ball",
-    "one piece": "One Piece",
+    "dragonball": "Dragon Ball",
+    "onepiece": "One Piece",
     "jjba": "JJBA"
 }
 
