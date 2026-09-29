@@ -264,7 +264,7 @@ async def anime(ctx, *, search):
             site_url = media.get("siteUrl") or ""
 
             await ctx.send(
-                f"**🎬 {title}**\n\n"
+                f"** {title}**\n\n"
                 f"**Synopsis:**\n{description}\n\n"
                 f"**Episodes:** {episodes}\n"
                 f"**Score:** {score}/100\n"
