@@ -311,7 +311,7 @@ async def givemod(ctx, member: discord.Member = None):
         return
 
     await member.add_roles(mod_role)
-    await ctx.send(f"✅ {member.mention} has been given the `Moderator` role.")
+    await ctx.send(f" {member.mention} has been given the `Moderator` role.")
 
 
 @bot.command() #remove mod role
@@ -333,7 +333,7 @@ async def removemod(ctx, member: discord.Member = None):
         return
 
     await member.remove_roles(mod_role)
-    await ctx.send(f"✅ {member.mention} has had the `Moderator` role removed.")
+    await ctx.send(f" {member.mention} has had the `Moderator` role removed.")
 
 
 @bot.command() #kick
@@ -349,7 +349,7 @@ async def kick(ctx, member: discord.Member = None, *, reason="No reason provided
         return
 
     await member.kick(reason=reason)
-    await ctx.send(f"👢 {member.mention} has been kicked. Reason: {reason}")
+    await ctx.send(f" {member.mention} has been kicked. Reason: {reason}")
 
 
 @bot.command() #mute command
@@ -366,7 +366,7 @@ async def mute(ctx, member: discord.Member = None, duration: int = 10, *, reason
 
     until = discord.utils.utcnow() + datetime.timedelta(minutes=duration)
     await member.timeout(until, reason=reason)
-    await ctx.send(f"🔇 {member.mention} has been muted for {duration} minute(s). Reason: {reason}")
+    await ctx.send(f" {member.mention} has been muted for {duration} minute(s). Reason: {reason}")
 
 
 
@@ -383,7 +383,7 @@ async def ban(ctx, member: discord.Member = None, *, reason="No reason provided"
         return
 
     await member.ban(reason=reason)
-    await ctx.send(f"🔨 {member.mention} has been banned. Reason: {reason}")
+    await ctx.send(f" {member.mention} has been banned. Reason: {reason}")
 
 
 if not DISCORD_TOKEN: #token check
