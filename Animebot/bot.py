@@ -58,11 +58,6 @@ async def hello(ctx):
     await ctx.send("Hello, I'm YapBot!")
 
 
-@bot.command() #command I added for fun
-async def paynis(ctx):
-    await ctx.send("paynis")
-
-
 @bot.command(name="help") #help command - sends bot commands
 async def help_command(ctx):
     await ctx.send(
